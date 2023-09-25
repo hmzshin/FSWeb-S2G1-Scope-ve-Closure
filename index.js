@@ -3,25 +3,29 @@
 // Başlangıç Challenge'ı
 
 /**Örnek Görev: İlkini Dön
- * 
+ *
  * Bu örnek sonradan gelecek olan görevleri nasıl çözeceğinizi size gösterecek.
- * 
+ *
  * Aşağdıaki Yüksek dereceden fonskiyonu(higher-order function) kullanarak aşağıdakileri yapınız
  *  1. Stringlerden oluşan bir array'i parametre olarak alın
- *  2. Bir string'i değişken olarak alan bir callback fonksiyonunu parametre olarak alın 
+ *  2. Bir string'i değişken olarak alan bir callback fonksiyonunu parametre olarak alın
  *  3. Array'in İLK elemanını değişken olarak alarak çalışacak olan callback fonksiyonunun sonucunu dönün
- * 
+ *
  * Aşağıdaki kodlar bu görevin nasıl yapılacağına örnek olacaktır
  * Bu fonskiyon 'asas' dönmeli(return)
-*/
+ */
 
 function ilkiniDon(stringArray, callback) {
-  return callback(stringArray[0])
+  return callback(stringArray[0]);
 }
-console.log('örnek görev:', ilkiniDon(['as','sa'],function(metin){return metin+metin}));
+console.log(
+  "örnek görev:",
+  ilkiniDon(["as", "sa"], function (metin) {
+    return metin + metin;
+  })
+);
 
 // Başlangıç Challenge'ı Sonu
-
 
 ///// M V P ///////
 
@@ -40,11 +44,13 @@ console.log('örnek görev:', ilkiniDon(['as','sa'],function(metin){return metin
 function skorArtirici() {
   let skor = 0;
   return function skorGuncelle() {
-   return skor++;
-  }
+    return skor++;
+  };
 }
 
 const skor1 = skorArtirici();
+console.log(skor1());
+console.log(skor1());
 
 // skor2 kodları
 let skor = 0;
@@ -53,6 +59,19 @@ function skor2() {
   return skor++;
 }
 
+console.log(skor2());
+console.log(skor2());
+
+console.log(
+  "1a - skor1 de skor local değişken olarak tanımlanmış, bu değere foksiyon çağırılmadığı sürece ulaşılamaz fakat skor2 de skor bir global değişken olarak tanımlandığı için sürekli ulaşılabilir ve değiştirilebilir "
+);
+
+console.log(
+  "1b - skor1 de closure kullanılmış bu sayede dışardan müdahale (örneğin skor=5; ) ile skor değeri değiştirilemez"
+);
+console.log(
+  "1c - birincisi maç skoru değişimi için kullanılablir, skor2 ise periyot skoru değişimi için kullanılabilir çünkü yeni periyot başladığı zaman skor sayısının sıfırdan başlaması gerekir ve skor2 de global olarak tanımladığımız için kolaylıkla değiştirebiliriz."
+);
 
 /* Görev 2: takimSkoru() 
 Aşağıdaki takimSkoru() fonksiyonununda aşağıdakileri yapınız:
@@ -64,12 +83,10 @@ Aşağıdaki takimSkoru() fonksiyonununda aşağıdakileri yapınız:
 Not: Bu fonskiyon, aşağıdaki diğer görevler için de bir callback fonksiyonu olarak da kullanılacak
 */
 
-function takimSkoru(/*Kodunuzu buraya yazınız*/){
-    /*Kodunuzu buraya yazınız*/
+function takimSkoru() {
+  const random = Math.floor(Math.random() * 16 + 10);
+  return random;
 }
-
-
-
 
 /* Görev 3: macSonucu() 
 Aşağıdaki macSonucu() fonksiyonununda aşağıdakileri yapınız:
@@ -84,16 +101,19 @@ Aşağıdaki macSonucu() fonksiyonununda aşağıdakileri yapınız:
   "EvSahibi": 92,
   "KonukTakim": 80
 }
-*/ 
+*/
 
-function macSonucu(/*Kodunuzu buraya yazınız*/){
-  /*Kodunuzu buraya yazınız*/
+function macSonucu(callback, ceyrekSayısı) {
+  let evSahibi = null;
+  let deplasman = null;
+
+  for (let i = 0; i < ceyrekSayısı; i++) {
+    evSahibi = evSahibi + callback();
+    deplasman = deplasman + callback();
+  }
+
+  return { EvSahibi: evSahibi, KonukTakim: deplasman };
 }
-
-
-
-
-
 
 /* Zorlayıcı Görev 4: periyotSkoru()
 Aşağıdaki periyotSkoru() fonksiyonununda aşağıdakileri yapınız:
@@ -108,13 +128,14 @@ Aşağıdaki periyotSkoru() fonksiyonununda aşağıdakileri yapınız:
 }
   */
 
+function periyotSkoru(callback) {
+  const evSahibi = callback();
+  const deplasman = callback();
 
-function periyotSkoru(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
-
+  return { EvSahibi: evSahibi, KonukTakim: deplasman };
 }
 
-
+console.log(periyotSkoru(takimSkoru));
 /* Zorlayıcı Görev 5: skorTabelasi() 
 Aşağıdaki skorTabelasi() fonksiyonunu kullanarak aşağıdakileri yapınız:
   1. İlk parametre olarak Görev 4'te oluşturduğumuz 'periyotSkoru'nu bir değişken olarak almalı
@@ -146,17 +167,43 @@ MAÇ UZAR ise skorTabelasi(periyotSkoru,takimSkoru,4)
 ] */
 // NOTE: Bununla ilgili bir test yoktur. Eğer logladığınız sonuçlar yukarıdakine benziyor ise tmamlandı sayabilirsiniz.
 
-function skorTabelasi(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
+function skorTabelasi(function1, function2, period) {
+  const ceyrekSonucları = [];
+  for (let i = 0; i < period; i++) {
+    ceyrekSonucları[i] = function1(function2);
+    console.log(
+      `${i + 1}. Periyot: Ev Sahibi ${
+        ceyrekSonucları[i].EvSahibi
+      } - Konuk Takım ${ceyrekSonucları[i].KonukTakim}`
+    );
+  }
+
+  let evSonuc = null;
+  let depSonuc = null;
+
+  for (let i = 0; i < ceyrekSonucları.length; i++) {
+    evSonuc += ceyrekSonucları[i].EvSahibi;
+    depSonuc += ceyrekSonucları[i].KonukTakim;
+  }
+
+  if (period === 4 && evSonuc === depSonuc) {
+    const evUzatma = function2();
+    const depUzatma = function2();
+    evSonuc += evUzatma;
+    depSonuc += depUzatma;
+    return `1. Uzatma: Ev Sahibi ${evUzatma} - Konuk Takım ${depUzatma}
+   Maç Sonucu: Ev Sahibi ${evSonuc} - Konuk Takım ${depSonuc}`;
+  } else {
+    return `Maç Sonucu: Ev Sahibi ${evSonuc} - Konuk Takım ${depSonuc}`;
+  }
 }
 
-
-
+console.log(skorTabelasi(periyotSkoru, takimSkoru, 4));
 
 /* Aşağıdaki satırları lütfen değiştirmeyiniz*/
-function sa(){
-  console.log('Kodlar çalışıyor');
-  return 'as';
+function sa() {
+  console.log("Kodlar çalışıyor");
+  return "as";
 }
 sa();
 module.exports = {
@@ -168,4 +215,4 @@ module.exports = {
   macSonucu,
   periyotSkoru,
   skorTabelasi,
-}
+};
